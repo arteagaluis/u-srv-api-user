@@ -15,7 +15,7 @@ COPY . .
 
 
 # Expose the port your app runs on
-EXPOSE 3001
+EXPOSE 4000
 
 # Start the application
 CMD ["node", "src/index.js"]
