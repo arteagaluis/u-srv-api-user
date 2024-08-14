@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    validEmail: {
+      type: Boolean,
+      required: true,
+      trim: true,
+    },
   },
   {
     timestamps: true,
