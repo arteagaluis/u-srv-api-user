@@ -28,7 +28,7 @@ export const sendVerificationEmail = async (to, token) => {
     html: `
       <h1>Verificación de correo electrónico</h1>
       <p>Gracias por registrarte. Por favor, verifica tu dirección de correo electrónico haciendo clic en el enlace a continuación:</p>
-      <a href="http://localhost:3000/verify-email/${token}">Verificar Correo Electrónico</a>
+      <a href="http://localhost:4000/verify-email/${token}">Verificar Correo Electrónico</a>
       <p>Si no solicitaste esta verificación, por favor ignora este correo.</p>
     `,
   };
