@@ -1,18 +1,15 @@
 import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import { createAccessToken } from '../libs/jwt.js';
-import {
-  generateVerificationToken,
-  sendVerificationEmail,
-} from '../services/emailService.js';
+import { sendVerificationEmail } from '../services/emailService.js';
 import jwt from 'jsonwebtoken';
+
+import { TOKEN_SECRET } from '../config.js';
 
 export const register = async (req, res) => {
   const { email, password, username } = req.body;
 
   try {
-    //   User.create({  }) // -> una manera para crear usuarios en mongoDB
-
     const passwordHash = await bcrypt.hash(password, 10); // bcrypt.hash devuelve el el dato hasheado
 
     const newUser = new User({
@@ -22,23 +19,14 @@ export const register = async (req, res) => {
       validEmail: false,
     });
 
+    const token = await createAccessToken({ email });
+    await sendVerificationEmail(email, token);
+
     const userSaved = await newUser.save();
 
-    const verificationToken = generateVerificationToken(userSaved);
-
-    await sendVerificationEmail(userSaved.email, verificationToken);
     res.status(201).json({
       message: 'Usuario registrado. Por favor, verifica tu correo electrónico.',
     });
-
-    // const token = await createAccessToken({ id: userSaved._id });
-
-    // res.cookie('token', token);
-
-    // res.json({
-    //   id: userSaved._id,
-    //   email: userSaved.email,
-    // });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -52,11 +40,15 @@ export const verifyEmail = async (req, res) => {
   }
 
   try {
-    const decoded = jwt.verify(token, 'tu_clave_secreta'); // Usa la misma clave secreta utilizada para generar el token
-    const userId = decoded.id;
+    const decoded = jwt.verify(token, TOKEN_SECRET); // Usa la misma clave secreta utilizada para generar el token
+    const userEmail = decoded.email;
 
-    // Buscar el usuario por su ID y marcarlo como verificado
-    const user = await User.findByIdAndUpdate(userId, { validEmail: true });
+    // buscar por email y actualizar el campo validEmail
+    const user = await User.findOneAndUpdate(
+      { email: userEmail }, // Criterio de búsqueda
+      { validEmail: true }, // Campo a actualizar
+      { new: true } // Opciones: `new: true` devuelve el documento actualizado
+    );
 
     if (!user) {
       return res.status(400).json({ error: 'Invalid token or user not found' });
@@ -73,17 +65,15 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const info = await User.findOne({ email }).select('validEmail');
-
-    console.log(typeof info.validEmail);
-
-    if (!info.validEmail) {
-      return res.status(400).json({ menssage: 'email no validado' });
-    }
     const userFound = await User.findOne({ email });
+    const info = await User.findOne({ email }).select('validEmail');
 
     if (!userFound) {
       return res.status(400).json({ menssage: 'usuario no encontrado' });
+    }
+
+    if (!info.validEmail) {
+      return res.status(400).json({ menssage: 'email no validado' });
     }
 
     const isMatch = await bcrypt.compare(password, userFound.password); //bcrypt.compare devuleve un booleano
@@ -104,12 +94,6 @@ export const login = async (req, res) => {
   }
 };
 
-export const logout = (req, res) => {
-  res.cookie('token', '', { expires: new Date(0) });
-
-  return res.sendStatus(200);
-};
-
 export const profile = async (req, res) => {
   const userFound = await User.findById(req.user.id);
 
@@ -120,4 +104,10 @@ export const profile = async (req, res) => {
     username: userFound.username,
     email: userFound.email,
   });
+};
+
+export const logout = (req, res) => {
+  res.cookie('token', '', { expires: new Date(0) });
+
+  return res.sendStatus(200);
 };
