@@ -13,6 +13,9 @@ RUN npm install
 # Copy rest of the application code
 COPY . .
 
+# Definir variables de entorno
+ENV NODE_ENV=production
+ENV MONGO_URI_DOCKER=mongodb://mongo:27017/mydatabase
 
 # Expose the port your app runs on
 EXPOSE 4000
