@@ -5,15 +5,15 @@ import nodemailer from 'nodemailer';
 export const sendVerificationEmail = async (to, token) => {
   // Configuración del transporter para enviar correos
   const transporter = nodemailer.createTransport({
-    service: 'Outlook', // Puedes cambiar a otro servicio como Outlook
+    service: 'gmail', // Puedes cambiar a otro servicio como Outlook
     auth: {
-      user: 'luigi_arteaga@hotmail.com',
-      pass: 'Transistor3906!', // Asegúrate de utilizar una contraseña de aplicación o configuraciones adecuadas para mayor seguridad
+      user: 'arteagaluis123@gmail.com',
+      pass: 'exld ukor igzf apeh', // Asegúrate de utilizar una contraseña de aplicación o configuraciones adecuadas para mayor seguridad
     },
   });
 
   const mailOptions = {
-    from: 'luigi_arteaga@hotmail.com',
+    from: 'arteagaluis123@gmail.com',
     to: to,
     subject: 'Verifica tu dirección de correo electrónico',
     html: `
