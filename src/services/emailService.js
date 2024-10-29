@@ -3,13 +3,12 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const emailUri =
-  process.env.NODE_ENV === 'production'
-    ? process.env.BASE_PATH_PROD
-    : process.env.BASE_PATH_LOCAL;
-
 // Función para enviar el correo de validación
 export const sendVerificationEmail = async (to, token) => {
+  const emailUri =
+    process.env.NODE_ENV === 'production'
+      ? process.env.BASE_PATH_PROD
+      : process.env.BASE_PATH_LOCAL;
   // Configuración del transporter para enviar correos
   const transporter = nodemailer.createTransport({
     service: 'gmail', // Puedes cambiar a otro servicio como Outlook
