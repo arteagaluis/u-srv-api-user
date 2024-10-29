@@ -4,7 +4,15 @@ import authRoutes from './routes/auth.routes.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
+import dotenv from 'dotenv';
+
+dotenv.config();
 const app = express();
+
+const emailUri =
+  process.env.NODE_ENV === 'production'
+    ? process.env.BASE_PATH_PROD
+    : process.env.BASE_PATH_LOCAL;
 
 // app.use(
 //   cors({
@@ -15,7 +23,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'http://iot-test.online:3000',
+    origin: emailUri,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

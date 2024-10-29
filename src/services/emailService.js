@@ -1,10 +1,10 @@
 // services/emailService.js
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-dotenv.config();
 
 // Función para enviar el correo de validación
 export const sendVerificationEmail = async (to, token) => {
+  dotenv.config();
   const emailUri =
     process.env.NODE_ENV === 'production'
       ? process.env.BASE_PATH_PROD
