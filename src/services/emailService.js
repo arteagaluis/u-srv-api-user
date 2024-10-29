@@ -3,6 +3,11 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 dotenv.config();
 
+const emailUri =
+  process.env.NODE_ENV === 'production'
+    ? process.env.BASE_PATH_PROD
+    : process.env.BASE_PATH_LOCAL;
+
 // Función para enviar el correo de validación
 export const sendVerificationEmail = async (to, token) => {
   // Configuración del transporter para enviar correos
@@ -21,7 +26,7 @@ export const sendVerificationEmail = async (to, token) => {
     html: `
       <h1>Verificación de correo electrónico</h1>
       <p>Gracias por registrarte. Por favor, verifica tu dirección de correo electrónico haciendo clic en el enlace a continuación:</p>
-      <a href="${process.env.BASE_PATH}/verify-email/${token}">Verificar Correo Electrónico</a>
+      <a href="${emailUri}/verify-email/${token}">Verificar Correo Electrónico</a>
       <p>Si no solicitaste esta verificación, por favor ignora este correo.</p>
     `,
   };
