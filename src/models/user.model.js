@@ -1,5 +1,22 @@
 import mongoose from 'mongoose';
 
+const deviceSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  type: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  registrationDate: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const userSchema = new mongoose.Schema(
   {
     username: {
@@ -22,6 +39,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    devices: [deviceSchema],
   },
   {
     timestamps: true,

@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import authRoutes from './routes/auth.routes.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import deviceRoutes from './routes/device.routes.js';
 
 import dotenv from 'dotenv';
 
@@ -36,5 +37,6 @@ app.use(express.json()); //convertir los request body en json
 app.use(cookieParser());
 
 app.use('/api', authRoutes);
+app.use('/api', deviceRoutes);
 
 export default app;
