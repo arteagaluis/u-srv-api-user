@@ -16,7 +16,7 @@ COPY . .
 # Definir variables de entorno
 ENV NODE_ENV=production
 ENV MONGO_URI_DOCKER=mongodb://mongo:27017/mydatabase
-ENV BASE_PATH_PROD=http://iot-test.online:3000
+ENV BASE_PATH_PROD=https://dashboard.teliot.site
 
 # Expose the port your app runs on
 EXPOSE 4000
